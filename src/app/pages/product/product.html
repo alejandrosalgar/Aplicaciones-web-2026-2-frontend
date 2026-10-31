@@ -1,0 +1,196 @@
+<header class="hero">
+  <h2>Products</h2>
+  <p>Administra el inventario: crea, edita y elimina productos.</p>
+</header>
+
+@if (error()) {
+  <div class="alerta">⚠ {{ error() }}</div>
+}
+
+<section class="card">
+  <h3>{{ editingId() ? 'Editar producto' : 'Nuevo producto' }}</h3>
+
+  <form #f="ngForm" (ngSubmit)="f.valid && save()" novalidate class="form">
+
+    <div class="campo">
+      <label for="name">Nombre <span class="req">*</span></label>
+      <input id="name" name="name" #name="ngModel" [(ngModel)]="form.name"
+             required maxlength="50" placeholder="Ej: Monitor 24 pulgadas"
+             [class.invalido]="name.invalid && (name.touched || f.submitted)" />
+      <div class="pie">
+        @if (name.invalid && (name.touched || f.submitted)) {
+          <small class="msg-error">El nombre es obligatorio</small>
+        } @else {
+          <small class="ayuda">Obligatorio</small>
+        }
+        <small class="contador">{{ form.name.length }}/50</small>
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="category">Categoría <span class="req">*</span></label>
+      <input id="category" name="category" #category="ngModel" [(ngModel)]="form.category"
+             required maxlength="25" placeholder="Ej: Periféricos"
+             [class.invalido]="category.invalid && (category.touched || f.submitted)" />
+      <div class="pie">
+        @if (category.invalid && (category.touched || f.submitted)) {
+          <small class="msg-error">La categoría es obligatoria</small>
+        } @else {
+          <small class="ayuda">Obligatorio</small>
+        }
+        <small class="contador">{{ form.category.length }}/25</small>
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="sku">SKU <span class="req">*</span></label>
+      <input id="sku" name="sku" #sku="ngModel" [(ngModel)]="form.sku"
+             required maxlength="50" placeholder="Ej: MON-001"
+             [class.invalido]="sku.invalid && (sku.touched || f.submitted)" />
+      <div class="pie">
+        @if (sku.invalid && (sku.touched || f.submitted)) {
+          <small class="msg-error">El SKU es obligatorio</small>
+        } @else {
+          <small class="ayuda">Código único del producto</small>
+        }
+        <small class="contador">{{ form.sku.length }}/50</small>
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="cost">Costo <span class="req">*</span></label>
+      <input id="cost" name="cost" type="number" #cost="ngModel" [(ngModel)]="form.cost"
+             required min="0.01" step="0.01" placeholder="0.00"
+             [class.invalido]="cost.invalid && (cost.touched || f.submitted)" />
+      <div class="pie">
+        @if (cost.invalid && (cost.touched || f.submitted)) {
+          @if (cost.errors?.['required']) {
+            <small class="msg-error">El costo es obligatorio</small>
+          } @else {
+            <small class="msg-error">El costo debe ser mayor a 0</small>
+          }
+        } @else {
+          <small class="ayuda">Debe ser mayor a 0</small>
+        }
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="stock">Stock <span class="req">*</span></label>
+      <input id="stock" name="stock" type="number" #stock="ngModel" [(ngModel)]="form.stock"
+             required min="0" step="1" placeholder="0"
+             [class.invalido]="stock.invalid && (stock.touched || f.submitted)" />
+      <div class="pie">
+        @if (stock.invalid && (stock.touched || f.submitted)) {
+          @if (stock.errors?.['required']) {
+            <small class="msg-error">El stock es obligatorio</small>
+          } @else {
+            <small class="msg-error">El stock no puede ser negativo</small>
+          }
+        } @else {
+          <small class="ayuda">Cero o más unidades</small>
+        }
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="brand">Marca</label>
+      <input id="brand" name="brand" [(ngModel)]="form.brand"
+             maxlength="80" placeholder="Ej: Dell (opcional)" />
+      <div class="pie">
+        <small class="ayuda">Opcional</small>
+        <small class="contador">{{ form.brand?.length ?? 0 }}/80</small>
+      </div>
+    </div>
+
+    <div class="campo ancho">
+      <label for="description">Descripción <span class="req">*</span></label>
+      <input id="description" name="description" #description="ngModel" [(ngModel)]="form.description"
+             required maxlength="200" placeholder="Describe el producto"
+             [class.invalido]="description.invalid && (description.touched || f.submitted)" />
+      <div class="pie">
+        @if (description.invalid && (description.touched || f.submitted)) {
+          <small class="msg-error">La descripción es obligatoria</small>
+        } @else {
+          <small class="ayuda">Obligatorio</small>
+        }
+        <small class="contador">{{ form.description.length }}/200</small>
+      </div>
+    </div>
+
+    <div class="campo ancho">
+      <label for="image_url">URL de la imagen</label>
+      <input id="image_url" name="image_url" [(ngModel)]="form.image_url"
+             maxlength="300" placeholder="https://... (opcional)" />
+      <div class="pie">
+        <small class="ayuda">Opcional</small>
+        <small class="contador">{{ form.image_url?.length ?? 0 }}/300</small>
+      </div>
+    </div>
+
+    <div class="campo">
+      <span class="etiqueta">Disponibilidad</span>
+      <label class="interruptor">
+        <input type="checkbox" name="available" [(ngModel)]="form.available" />
+        <span class="slider"></span>
+        <span>{{ form.available ? 'Disponible' : 'No disponible' }}</span>
+      </label>
+    </div>
+
+    <div class="acciones">
+      @if (editingId()) {
+        <button type="button" class="btn-secundario" (click)="reset()">Cancelar</button>
+      }
+      <button type="submit" class="btn-primario">
+        {{ editingId() ? 'Actualizar producto' : 'Crear producto' }}
+      </button>
+    </div>
+  </form>
+</section>
+
+<h3 class="subtitulo">Listado de productos <span class="badge">{{ products().length }}</span></h3>
+<div class="buscador">
+  <input [(ngModel)]="searchId" placeholder="Buscar por id (UUID)" (keyup.enter)="buscar()" />
+  <button class="btn-primario" (click)="buscar()">Buscar</button>
+  <button class="btn-secundario" (click)="limpiarBusqueda()">Ver todos</button>
+</div>
+
+<div class="tabla-wrap">
+  <table class="tabla">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Categoría</th>
+        <th>SKU</th>
+        <th>Costo</th>
+        <th>Stock</th>
+        <th>Marca</th>
+        <th>Disponible</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (p of products(); track p.id) {
+        <tr>
+          <td class="nombre">{{ p.name }}</td>
+          <td>{{ p.category }}</td>
+          <td><span class="sku">{{ p.sku }}</span></td>
+          <td class="costo">{{ p.cost }}</td>
+          <td>{{ p.stock }}</td>
+          <td>{{ p.brand }}</td>
+          <td>
+            <span class="estado" [class.no]="!p.available">
+              {{ p.available ? 'Sí' : 'No' }}
+            </span>
+          </td>
+          <td class="celda-acciones">
+            <button class="btn-editar" (click)="edit(p)">Editar</button>
+            <button class="btn-eliminar" (click)="remove(p)">Eliminar</button>
+          </td>
+        </tr>
+      } @empty {
+        <tr><td colspan="8" class="vacio">No hay productos todavía</td></tr>
+      }
+    </tbody>
+  </table>
+</div>
