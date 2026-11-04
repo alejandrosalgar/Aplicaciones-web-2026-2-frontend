@@ -2,8 +2,7 @@ import { Routes } from '@angular/router';
 
 import { Shell } from './layout/shell/shell';
 import { Empleados } from './pages/empleado/empleado';
-import { ProductPage } from './pages/product/product';
-
+import { Animales } from './pages/animal/animal';
 
 export const routes: Routes = [
   {
@@ -12,7 +11,7 @@ export const routes: Routes = [
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'Empleados' },
       { path: 'Empleados', component: Empleados },
-      { path: 'products', component: ProductPage },
+      { path: 'Animales', component: Animales },
     ],
   },
   { path: '**', redirectTo: 'Empleados' },
