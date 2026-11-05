@@ -1,0 +1,33 @@
+.proveedor-popup {
+  width: min(640px, 100%);
+}
+
+.proveedor-campos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.proveedor-campo-ancho {
+  grid-column: 1 / -1;
+}
+
+.proveedor-activo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.proveedor-activo input {
+  width: auto;
+}
+
+@media (max-width: 520px) {
+  .proveedor-campos {
+    grid-template-columns: 1fr;
+  }
+
+  .proveedor-campo-ancho {
+    grid-column: auto;
+  }
+}
