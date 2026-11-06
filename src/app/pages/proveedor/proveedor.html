@@ -1,0 +1,114 @@
+<header class="crud-barra">
+  <h2>Proveedores</h2>
+
+  <form class="filtro" (submit)="$event.preventDefault(); buscarPorId()">
+    <input
+      [(ngModel)]="idFiltro"
+      name="idFiltro"
+      placeholder="Filtrar por ID"
+      autocomplete="off"
+    />
+    <button type="submit" [disabled]="cargando()">Buscar</button>
+    <button type="button" class="secundario" (click)="limpiarFiltro()" [disabled]="cargando()">
+      Todos
+    </button>
+  </form>
+
+  <button type="button" (click)="abrirCrear()">+ Crear</button>
+</header>
+
+@if (mensaje()) {
+  <p class="mensaje" [class.error]="esError()">{{ mensaje() }}</p>
+}
+
+<table>
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>NIT</th>
+      <th>Contacto</th>
+      <th>Teléfono</th>
+      <th>Email</th>
+      <th>Dirección</th>
+      <th>Estado</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (fila of filas(); track fila.id) {
+      <tr>
+        <td>{{ fila.nombre }}</td>
+        <td>{{ fila.nit }}</td>
+        <td>{{ fila.contacto }}</td>
+        <td>{{ fila.telefono }}</td>
+        <td>{{ fila.email }}</td>
+        <td>{{ fila.direccion }}</td>
+        <td>{{ fila.activo ? 'Activo' : 'Inactivo' }}</td>
+        <td class="acciones">
+          <button type="button" (click)="abrirEditar(fila)">Editar</button>
+          <button type="button" class="peligro" (click)="eliminar(fila)">Eliminar</button>
+        </td>
+      </tr>
+    } @empty {
+      <tr>
+        <td colspan="8">No hay proveedores registrados</td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+@if (popupAbierto()) {
+  <div class="fondo-popup" (click)="cerrarPopup()">
+    <form class="popup proveedor-popup" (click)="$event.stopPropagation()" (ngSubmit)="guardar()">
+      <h3>{{ modo() === 'crear' ? 'Crear proveedor' : 'Editar proveedor' }}</h3>
+
+      <div class="proveedor-campos">
+        <label class="campo">
+          <span>Nombre</span>
+          <input [(ngModel)]="formulario.nombre" name="nombre" required maxlength="120" />
+        </label>
+        <label class="campo">
+          <span>NIT</span>
+          <input [(ngModel)]="formulario.nit" name="nit" required maxlength="30" />
+        </label>
+        <label class="campo">
+          <span>Persona de contacto</span>
+          <input [(ngModel)]="formulario.contacto" name="contacto" required maxlength="120" />
+        </label>
+        <label class="campo">
+          <span>Teléfono</span>
+          <input
+            [(ngModel)]="formulario.telefono"
+            name="telefono"
+            type="tel"
+            required
+            maxlength="30"
+          />
+        </label>
+        <label class="campo proveedor-campo-ancho">
+          <span>Email</span>
+          <input
+            [(ngModel)]="formulario.email"
+            name="email"
+            type="email"
+            required
+            maxlength="254"
+          />
+        </label>
+        <label class="campo proveedor-campo-ancho">
+          <span>Dirección</span>
+          <input [(ngModel)]="formulario.direccion" name="direccion" required maxlength="250" />
+        </label>
+        <label class="proveedor-activo">
+          <input type="checkbox" [(ngModel)]="formulario.activo" name="activo" />
+          Proveedor activo
+        </label>
+      </div>
+
+      <div class="popup-acciones">
+        <button type="button" class="secundario" (click)="cerrarPopup()">Cancelar</button>
+        <button type="submit" [disabled]="cargando()">Guardar</button>
+      </div>
+    </form>
+  </div>
+}
