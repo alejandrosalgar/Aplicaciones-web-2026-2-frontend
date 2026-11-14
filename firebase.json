@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "public": "dist/APLICACIONES-WEB-2026-2/browser",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
